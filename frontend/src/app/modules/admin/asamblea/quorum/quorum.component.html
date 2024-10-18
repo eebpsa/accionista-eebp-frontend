@@ -1,0 +1,81 @@
+<fuse-loading-bar></fuse-loading-bar>
+
+<div class="w-full p-6 sm:p-10" >
+    <!-- titulos -->
+
+
+
+    <div class="flex px-3 pt-10 bg-card shadow rounded overflow-hidden md:items-center md:justify-center">
+
+        <div class=" w-full flex xsm:flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row py-5 md:items-center md:justify-center">
+            <div class="w-full p-2 mr-2 min-w-80 xsm:mr-18  flex justify-center ">
+                <canvas id="chart" class="w-full h-full">{{ chart }}</canvas>
+            </div>
+
+
+            <div class=" w-full bg-card flex"  >
+
+                <div class="w-full flex flex-col justify-center items-center  px-4 ">
+
+                    <!-- primera seccion  -->
+                    <div class="flex flex-col bg-card shadow mb-7  md:w-120 p-4 rounded-md border xsm:w-72 xsm:justify-start sm:w-120">
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary sm:text-xl xsm:text-md">ASAMBLEA NÚMERO </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.consecutivoAsamblea">
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary sm:text-xl xsm:text-md">TOTAL ASAMBLEA </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.totalRegistros">
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- segunda seccion -->
+
+                    <div class="flex flex-col bg-card shadow mb-7  md:w-120 p-4 rounded-md border xsm:w-72 xsm:justify-start  sm:w-120">
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary sm:text-xl xsm:text-md">ACCIONES ASAMBLEA </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.totalAccionesAsamblea" >
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary sm:text-xl xsm:text-md">TOTAL ACCIONES </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.totalAcciones">
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- tercera seccion  -->
+                    <div class="flex flex-col bg-card shadow mb-7  md:w-120  p-4 rounded-md border xsm:w-72 xsm:justify-start sm:w-120">
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary sm:text-xl xsm:text-md">QUORUM </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" readonly [value]="datosQuorum?.quorum | porcentajesQuorum">
+                                <mat-icon svgIcon="heroicons_solid:receipt-percent"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <button mat-fab class="w-full" (click)="validarQuorum()">
+                                <p class="font-bold sm:text-xl xsm:text-md">VALIDAR QUORUM</p>
+                              </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+

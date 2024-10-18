@@ -1,0 +1,58 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+
+        <div class="text-3xl font-extrabold tracking-tight leading-none">Seguridad > Crear usuario</div><br>
+
+        <div class="max-h-400">
+
+            <form class="flex-auto mt-4 px-8 pt-10 pb-8 bg-card shadow rounded overflow-hidden" (submit)="onSubmit()" id="form">
+
+            <p class="text-lg font-medium">DATOS PERSONALES</p>
+            <mat-divider class="mt-6 mb-10"></mat-divider>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+              <mat-label>Código de usuario (Identificación):</mat-label>
+              <mat-icon
+                matPrefix
+                class="hidden sm:flex icon-size-5"
+                [svgIcon]="'heroicons_outline:tag'">
+              </mat-icon>
+              <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" (ngModelChange)="usuarioExistente()" [formControl]="filtroControl" required [matAutocomplete]="auto" pattern="[0-9]*">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codUsuario">
+                  {{ dato.codUsuario }} - {{ (dato.nomPri || dato.nomSeg || dato.apePri || dato.apeSeg) ? (dato.nomPri + ' ' + dato.nomSeg + ' ' + dato.apePri + ' ' + dato.apeSeg) : dato.razonSocial }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error>Solo se permiten números.</mat-error>
+            </mat-form-field>
+
+            <button type="button" class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button><br>
+
+            <div *ngIf="usuarioEncontrado">
+              <mat-divider class="mt-6 mb-10"></mat-divider>
+              <p class="mt-4 sm:ml-4"><strong>IDENTIFICACIÓN: </strong>{{ usuarioEncontrado.codUsuario }}</p>
+              <p class=" sm:ml-4"><strong>NOMBRE DE LA PERSONA: </strong>{{ usuarioEncontrado.nomPri }} {{usuarioEncontrado.nomSeg}} {{usuarioEncontrado.apePri}} {{usuarioEncontrado.apeSeg}} {{usuarioEncontrado.razonSocial}}</p>
+              <mat-divider class="mt-6 mb-10"></mat-divider>
+            </div>
+
+            <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+              <mat-label>Perfil:</mat-label>
+              <mat-icon
+                matPrefix
+                class="hidden sm:flex icon-size-5"
+                [svgIcon]="'heroicons_outline:tag'">
+              </mat-icon>
+              <mat-select id="perfil" name="perfil" [(ngModel)]="perfil" required>
+                <mat-option value="1">USUARIO SISTEMA</mat-option>
+              </mat-select>
+            </mat-form-field><br><br>
+            
+
+          <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-mini-fab [color]="'accent'" type="submit">Enviar</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+

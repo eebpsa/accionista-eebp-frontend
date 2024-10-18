@@ -1,0 +1,366 @@
+<div class="w-full h-auto" *ngIf="!pantallaDeCarga">
+    <div class="flex-auto p-6 sm:p-10">
+        <!-- titulos -->
+        <div
+            class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+            Resumen General de preguntas Asamblea No.{{consecutivoAsamblea}} </div>
+
+        <div class="flex-auto px-3 pt-10 bg-card shadow rounded overflow-hidden ">
+            <div class="p-10">
+                <form [formGroup]="preguntasGenerales" (ngSubmit)="enviarFormulario()">
+
+                    <mat-accordion>
+
+                        <!-- junta directiva -->
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="juntaDirectivaPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white"
+                                [class.bg-gray-300]="juntaDirectivaPreguntas.length === 0">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'junta directiva' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="juntaDirectiva">
+
+                                <div *ngFor="let pregunta of juntaDirectivaPreguntas.controls ; let i= index" class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta" class="w-full  mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ i+1}}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+
+
+                                            </div>
+                                        </div>
+                                        <p class="w-full font-semibold text-xl text-end p-3 text-primary">Tipo de
+                                            Respuesta: {{ pregunta.value.tipoRespuesta }}</p>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput readonly>
+
+                                            </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i" readonly>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+
+                        <!-- reformaEstatutos  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="reformaEstatutosPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'reforma estatutos' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="reformaEstatutos">
+
+                                <div *ngFor="let pregunta of reformaEstatutosPreguntas.controls ; let i= index"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ i+1}}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput readonly>
+
+                                                                    </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i" readonly>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+
+                        </mat-expansion-panel>
+
+                        <!-- distribucionUtilidades  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="distribucionUtilidadesPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'distribución de utilidades' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="distribucionUtilidades">
+
+                                <div *ngFor="let pregunta of distribucionUtilidadesPreguntas.controls ; let i= index"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ i+1}}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput readonly>
+
+                                                                    </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i" readonly>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+                        <!-- revisoriaFiscal  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="revisoriaFiscalPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'revisoria Fiscal' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="revisoriaFiscal">
+
+                                <div *ngFor="let pregunta of revisoriaFiscalPreguntas.controls ; let i= index" class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ i+1 }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput readonly>
+
+                                                                    </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i" readonly>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+                        <!-- estadosFinancieros  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="estadosFinancierosPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'estados financieros' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="estadosFinancieros">
+
+                                <div *ngFor="let pregunta of estadosFinancierosPreguntas.controls ; let i= index"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ i+1 }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput readonly>
+
+                                        </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i" readonly>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+                        <!-- proposicionesVarios  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="proposicionesVariosPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'proposiciones y varios' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="proposicionesVarios">
+
+                                <div *ngFor="let pregunta of proposicionesVariosPreguntas.controls ; let i= index"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ i+1 }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+
+                                                <mat-progress-spinner *ngIf="botonActivo" [diameter]="24"
+                                                    [mode]="'indeterminate'" class="mb-3"></mat-progress-spinner>
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput readonly>
+
+                                        </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i" readonly>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+
+                    </mat-accordion>
+
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="  rounded-md p-4  w-full px-10 mt-5 " *ngIf="pantallaDeCarga">
+    <div class="animate-pulse flex space-x-4 px-3 w-full bg-white">
+        <div class="flex-1 space-y-6  px-15 py-8">
+            <div class="h-12 bg-slate-300 rounded "></div>
+            <div class="h-12 bg-slate-300 rounded "></div>
+            <div class="h-12 bg-slate-300 rounded "></div>
+            <div class="h-12 bg-slate-300 rounded "></div>
+
+        </div>
+    </div>
+</div>

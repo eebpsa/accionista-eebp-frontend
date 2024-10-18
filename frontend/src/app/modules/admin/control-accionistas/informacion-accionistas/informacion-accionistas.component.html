@@ -1,0 +1,110 @@
+<div class="flex flex-colflex-auto min-w-0">
+
+    <!-- Main -->
+  <div class="flex-auto p-6 sm:p-10">
+
+    <div class="text-4xl font-extrabold tracking-tight leading-none">Información de accionistas</div><br>
+
+      <mat-divider class="mt-6 mb-10"></mat-divider><br>
+
+      <div class="w-80">
+        <app-input-autocomplete [labelInput]="'Filtro General'" (accionista)="obtenerAccionista($event)"
+            (valorInput)="applyFilter($event)"  [asociados]="true" />
+      </div><br>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2">
+
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef>FOTOGRAFIA</th>
+        <td mat-cell *matCellDef="let element">
+            <img
+                class="w-10 h-10 rounded-full"
+                src="/assets/images/avatars/{{element.codUsuario}}.jpg"
+                alt="Accionista avatar">
+        </td>
+    </ng-container>
+
+      <ng-container matColumnDef="codUsuario">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> CÓDIGO DE ACCIONISTA </th>
+        <td mat-cell *matCellDef="let element">{{element.tipDocumento}} {{element.codUsuario}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="accionista">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ES ACCIONISTA</th>
+        <td mat-cell *matCellDef="let element"> {{element.esAccionista}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nomPri">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header > NOMBRES </th>
+        <td mat-cell *matCellDef="let element"> {{ (element.nomPri || element.nomSeg || element.apePri || element.apeSeg) ? (element.nomPri + ' ' + element.nomSeg + ' ' + element.apePri + ' ' + element.apeSeg) : element.razonSocial }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="modificarFormatos">
+          <th mat-header-cell *matHeaderCellDef> MODIFICAR FORMATOS</th>
+          <td mat-cell *matCellDef="let element"> {{element.correoPersona.toUpperCase()}}
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pdf_datos">
+        <th mat-header-cell *matHeaderCellDef> DATOS PERSONALES </th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <a href="{{_baseUrl}}/api/accionistas/pdfDatosPersonales/{{element.codUsuario}}" target="_blank" title="Descargar formato" ><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pdf_autorizacion">
+        <th mat-header-cell *matHeaderCellDef> AUTORIZACIÓN DE DATOS </th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <ng-container *ngIf="element.esAccionista !== 'N'; else disabledIcon">
+            <a href="{{_baseUrl}}/api/accionistas/pdfAutorizacion/{{element.codUsuario}}" target="_blank" title="Descargar formato">
+              <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon>
+            </a>
+            <a class="sm:ml-4" href="accionistas/actualizar/autorizacion/{{element.codUsuario}}" title="Actualizar formato">
+              <mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon>
+            </a>
+          </ng-container>
+          <ng-template #disabledIcon>
+            <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn" class="opacity-50"></mat-icon>
+            <mat-icon svgIcon="mat_solid:update" color="accent" class="opacity-50 sm:ml-4"></mat-icon>
+          </ng-template>
+        </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="pdf_declaracion">
+        <th mat-header-cell *matHeaderCellDef> DECLARACIÓN DE INGRESOS </th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <ng-container *ngIf="element.esAccionista !== 'N'; else disabledIcon">
+            <a href="{{_baseUrl}}/api/accionistas/pdfDeclaracion/{{element.codUsuario}}" target="_blank" title="Descargar formato">
+              <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon>
+            </a>
+            <a class="sm:ml-4" href="accionistas/actualizar/declaracion/{{element.codUsuario}}" title="Actualizar formato">
+              <mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon>
+            </a>
+          </ng-container>
+          <ng-template #disabledIcon>
+            <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn" class="opacity-50"></mat-icon>
+            <mat-icon svgIcon="mat_solid:update" color="accent" class="opacity-50 sm:ml-4"></mat-icon>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actualizar">
+        <th mat-header-cell *matHeaderCellDef>  </th>
+        <td mat-cell *matCellDef="let element">
+          <a mat-button [color]="'accent'"
+          [routerLink]="['/accionistas/hojaderuta/' + element.codUsuario ]">Hoja de ruta<mat-icon svgIcon="alt_route"></mat-icon>
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No hay usuarios que coincidan con el código "{{input.value}}"</td>
+      </tr>
+    </table>
+
+  </div>
+</div>

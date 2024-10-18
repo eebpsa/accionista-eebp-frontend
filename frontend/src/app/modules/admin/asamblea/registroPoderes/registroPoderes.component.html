@@ -1,0 +1,210 @@
+<fuse-loading-bar></fuse-loading-bar>
+
+<div class="flex-auto p-6 sm:p-10">
+    <!-- titulos -->
+    <div class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center ">Registro de Poderes</div>
+    <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+        Pre-Asamblea </div>
+
+
+    <!-- alertas -->
+    <div class="flex justify-end fixed top-7 right-9 mt-13 w-full z-50 animated-box">
+
+        <div class="w-100 mb-4 ">
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+                <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción exitosa!
+                </fuse-alert>
+            </div>
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+                <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción no exitosa!
+                </fuse-alert>
+            </div>
+        </div>
+    </div>
+    <!-- fin alertas -->
+
+    <div class="flex-auto px-3 pt-10 bg-card shadow rounded overflow-hidden ">
+
+        <div class="flex flex-row justify-between">
+
+            <div class="flex flex-row w-full mb-5 ml-5 overflow-hidden">
+
+                <!-- Buscar Poderdante -->
+                <div class="w-72 mr-5">
+                    <app-input-autocomplete [labelInput]="'Poderdante'" (accionista)="obtenerPoderdante($event)"
+                        (valorInput)="obtenerInputPoderdante($event)"
+                        (errorFormulario)="errorFormularioPoderdante($event)" [asociados]="true" />
+                </div>
+
+                <!-- Buscar Apoderado -->
+                <div class="w-72">
+                    <app-input-autocomplete [labelInput]="'Apoderado'" (accionista)="obtenerApoderado($event)"
+                        (valorInput)="obtenerInputApoderado($event)"
+                        (errorFormulario)="errorFormularioApoderado($event)" [asociados]="null"  />
+                </div>
+
+                <!-- cargar archivos -->
+                <div class="flex items-end ml-2 mb-2">
+                    <app-button-cargar-documentos [nombreBoton]="'Cargar Archivo'"
+                        [formatosAceptados]="'.pdf,.doc,.docx'" (contieneArchivo)="contieneArchivo($event)"
+                        (archivo)="recibirArchivo($event)" />
+                </div>
+            </div>
+
+            <!-- BOTON AGREGAR -->
+            <div class=" mb-5 mr-3 flex">
+                <div class="flex items-end mb-2">
+                    <button mat-raised-button color="primary" class="w-40" (click)="enviarRegistroPoderes()"
+                        [disabled]="!esValidoPoderdante || !esValidoApoderado || !existeDocumento || botonActivo "><mat-icon
+                            svgIcon="heroicons_solid:user-plus" *ngIf="!botonActivo"></mat-icon>&nbsp;
+                        <span *ngIf="!botonActivo">
+                            Registrar
+                        </span>
+                        <mat-progress-spinner *ngIf="botonActivo" [diameter]="24" [mode]="'indeterminate'"
+                            class="mb-3"></mat-progress-spinner>
+
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Spinner carga -->
+    <div class="flex justify-center items-center h-100 bg-card " *ngIf="loading">
+        <mat-spinner diameter="50" color="accent"></mat-spinner>
+    </div>
+
+
+    <!-- Tabla con registros -->
+    <div class="flex-auto  w-full  px-8 pt-10 bg-card shadow rounded overflow-hidden" *ngIf="!loading">
+
+        <div class="flex flex-row justify-between items-center">
+            <mat-form-field class="w-72">
+                <mat-label>Filtro General</mat-label>
+                <mat-icon svgIcon="heroicons_solid:magnifying-glass-plus"></mat-icon>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Documento, N.Acciones..." #input>
+            </mat-form-field>
+
+
+            <button mat-fab [matMenuTriggerFor]="menu" [color]="'accent'"><mat-icon
+                    svgIcon="heroicons_solid:document-arrow-down"></mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="generarExcel()">Excel</button>
+            </mat-menu>
+        </div>
+
+        <div class="mat-elevation-z8 mb-5">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- consecutivo -->
+                <ng-container matColumnDef="CONSECUTIVO">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> NO. </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.consecutivo}} </td>
+                </ng-container>
+
+                <!-- Documento Poderdante -->
+                <ng-container matColumnDef="DOCUMENTO PODERDANTE">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> DOCUMENTO PODERDANTE </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.idPoderdante}}</td>
+                </ng-container>
+
+                <!-- Nombre Poderdante -->
+                <ng-container matColumnDef="PODERDANTE">
+                    <th mat-header-cell *matHeaderCellDef> PODERDANTE </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.nombrePoderdante}} </td>
+                </ng-container>
+
+                <!-- No.Acciones -->
+                <ng-container matColumnDef="N.ACCIONES">
+                    <th mat-header-cell *matHeaderCellDef> N.ACCIONES </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.accionesPoderdante}} </td>
+                </ng-container>
+
+                <!-- Apoderado-->
+                <ng-container matColumnDef="APODERADO">
+                    <th mat-header-cell *matHeaderCellDef> APODERADO </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.nombreApoderado}} </td>
+                </ng-container>
+
+                <!-- Documento Apoderado -->
+                <ng-container matColumnDef="DOCUMENTO APODERADO">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> <span class="text-center">DOCUMENTO
+                            APODERADO</span> </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.idApoderado}} </td>
+                </ng-container>
+
+                <!-- Estado -->
+                <ng-container matColumnDef="ESTADO">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> <span class="text-center">ESTADO
+                            APODERADO</span> </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> <span class="font-semibold"
+                            [ngStyle]="{ 'color': getColor(row.estado) }">{{row.estado}}</span> </td>
+                </ng-container>
+
+                <!-- Fruit Column -->
+                <ng-container matColumnDef="ACCIONES">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> ACCIONES </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <div class="flex fle-row justify-between">
+                            <a mat-button target="_blank"
+                            [href]="row.files[0]?  apiUrlDocumentos+row.files[0]?.url  : ''"
+                            [color]="'accent'"><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Documento</a>
+
+                            <button mat-stroked-button color="accent" class="ml-2" (click)="aprobarSolicitud(row)"><span
+                                    *ngIf="!botonActivoAcciones">
+                                    Aprobar
+                                </span>
+                                <mat-progress-spinner *ngIf="botonActivoAcciones" [diameter]="24"
+                                    [mode]="'indeterminate'"></mat-progress-spinner></button>
+
+                            <button mat-stroked-button color="warn" class="ml-2"
+                                (click)="abrirDialogo(dialogTemplate, row)"><span *ngIf="!botonActivoAcciones">
+                                    Rechazar
+                                </span>
+                                <mat-progress-spinner *ngIf="botonActivoAcciones" [diameter]="24" [mode]="'indeterminate'"
+                                    ></mat-progress-spinner></button>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="7" class="text-center  p-10 font-extrabold">
+                        <div class="flex flex-row text-center justify-center space-x-2 ">
+                            <mat-icon svgIcon="heroicons_outline:information-circle" class="text-accent"></mat-icon>
+                            <p>En este momento, no hay datos disponibles para visualizar.</p>
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+                class="justify-center"></mat-paginator>
+        </div>
+    </div>
+</div>
+
+<ng-template #dialogTemplate>
+    <div class="flex flex-row">
+        <mat-icon svgIcon="heroicons_solid:exclamation-triangle" color="warn" class="mr-2"></mat-icon>
+        <h2 mat-dialog-title class="font-extrabold"> Rechazar</h2>
+    </div>
+    <mat-dialog-content>
+        ¿Estás seguro de que deseas rechazar esta solicitud?
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close (click)="cerrarDialogo()"><span
+                class="font-bold text-warn">No</span></button>
+        <button mat-button mat-dialog-close cdkFocusInitial class="font-bold" (click)="aprobarDialogo()"> <span
+                class="font-bold text-accent">Si</span></button>
+    </mat-dialog-actions>
+</ng-template>
